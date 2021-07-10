@@ -29,7 +29,7 @@ export class App extends Component {
 
     if (shouldFetch) {
       try {
-        this.setState({ reqStatus: 'pending', pictures: [] })
+        this.setState({ reqStatus: 'pending', pictures: [], page: 1 })
         const pictures = await fetchPictures(pictureName, page)
         this.setState({ reqStatus: 'resolved' })
 
@@ -63,7 +63,7 @@ export class App extends Component {
       
         {showCountryInfo && <CountryInfo country={countries[0]} />}
         <Toaster position="top-right" /> */}
-        <ImageGallery pictures={pictures} />
+        {/* <ImageGallery pictures={pictures} /> */}
       </div>
     )
   }
