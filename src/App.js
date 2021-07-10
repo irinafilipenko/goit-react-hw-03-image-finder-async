@@ -29,9 +29,9 @@ export class App extends Component {
 
     if (shouldFetch) {
       try {
-        this.setState({ reqStatus: 'pending', pictures: [], page: 1 })
+        this.setState({ Status: 'pending', pictures: [], page: 1 })
         const pictures = await fetchPictures(pictureName, page)
-        this.setState({ reqStatus: 'resolved' })
+        this.setState({ Status: 'resolved' })
 
         // if (countries.length > 10) {
         //   return toast(
@@ -42,7 +42,7 @@ export class App extends Component {
 
         this.setState({ pictures })
       } catch (error) {
-        this.setState({ reqStatus: 'rejected' })
+        this.setState({ Status: 'rejected' })
         //   toast.error('Oops, there is no country with that name')
       }
     }
@@ -63,7 +63,7 @@ export class App extends Component {
       
         {showCountryInfo && <CountryInfo country={countries[0]} />}
         <Toaster position="top-right" /> */}
-        {/* <ImageGallery pictures={pictures} /> */}
+        <ImageGallery pictures={pictures} />
       </div>
     )
   }
