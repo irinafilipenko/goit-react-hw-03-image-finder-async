@@ -25,10 +25,5 @@ export const SearchBar = ({ onSearch }) => {
         />
       </form>
     </header>
-
-    // <form onSubmit={handleSearch} autoComplete="off">
-    //   <input type="text" name="countryName" />
-    //   <button type="submit">Search</button>
-    // </form>
   )
 }

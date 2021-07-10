@@ -21,7 +21,7 @@ export class App extends Component {
   state = {
     pictureName: null,
     pictures: [],
-    Status: Status.IDLE,
+    status: Status.IDLE,
     page: 1,
   }
 
@@ -65,7 +65,7 @@ export class App extends Component {
         status: Status.RESOLVED,
       }))
     } catch (error) {
-      this.setState({ Status: Status.REJECTED })
+      this.setState({ status: Status.REJECTED })
       onErrorToast()
     }
   }
@@ -74,21 +74,19 @@ export class App extends Component {
     const { pictureName, page } = this.state
     const shouldFetch =
       prevState.pictureName !== pictureName && pictureName !== ''
-    console.log('prev', prevState.pictureName)
-    console.log('next', pictureName)
 
     if (shouldFetch) {
       this.setState({ status: Status.PENDING, page: 1, pictures: [] })
       this.onFetchPictures()
     }
-    if (prevState.page !== this.state.page) {
+    if (prevState.page !== page) {
       console.log('hi')
       this.onFetchPictures()
     }
   }
 
   render() {
-    const { pictures, Status } = this.state
+    const { pictures, status } = this.state
     // const { countries, reqStatus } = this.state
     // const showCountryList = countries.length >= 2 && countries.length < 10
     // const showCountryInfo = countries.length === 1
@@ -99,8 +97,7 @@ export class App extends Component {
         <ToastContainer autoClose={4000} />
 
         <SearchBar onSearch={this.handleFormSubmit} />
-
-        <ImageGallery pictures={pictures} />
+        {status === Status.RESOLVED && <ImageGallery pictures={pictures} />}
         {showImageList && (
           <Button onClick={this.onLoadMoreBtn} aria-label="add contact" />
         )}
