@@ -11,7 +11,7 @@ import { ImageGallery } from './Components/ImageGallery/ImageGallery'
 import { fetchPictures } from './services/pictures-api'
 import Button from './Components/Button/Button'
 import Modal from './Components/Modal/Modal'
-import image from './Components/Images/defoultImg.jpg'
+import image from './Components/Images/search-g722c6413f_640.jpg'
 
 const Status = {
   IDLE: 'idle',
@@ -140,7 +140,7 @@ export class App extends Component {
         <SearchBar onSearch={this.handleFormSubmit} />
         {status === Status.IDLE && (
           <>
-            <img src={image} width="800" alt="question" className={s.image} />
+            <img src={image} width="1600" alt="question" className={s.image} />
           </>
         )}
         {status === Status.PENDING && <GalleryLoader />}
