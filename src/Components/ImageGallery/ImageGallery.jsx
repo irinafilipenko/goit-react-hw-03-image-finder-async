@@ -13,7 +13,8 @@ import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem'
 //     </ul>
 //   );
 
-export const ImageGallery = ({ pictures }) => {
+export const ImageGallery = ({ pictures, handleImageClick }) => {
+  console.log(handleImageClick)
   return (
     <ul className={s.ImageGallery}>
       {pictures.map(({ id, webformatURL, largeImageURL, tags }) => (
@@ -22,7 +23,7 @@ export const ImageGallery = ({ pictures }) => {
           webformatURL={webformatURL}
           largeImageURL={largeImageURL}
           tags={tags}
-          // handleImageClick={this.props.handleImageClick}
+          handleImageClick={handleImageClick}
         />
       ))}
     </ul>

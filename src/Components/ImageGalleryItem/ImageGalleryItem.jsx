@@ -13,9 +13,10 @@ function ImageGalleryItem({
         src={webformatURL}
         alt={tags}
         className={s.ImageGalleryItem_image}
-        // onClick={() => {
-        //   handleImageClick(largeImageURL, tags)
-        // }}
+        onClick={() => {
+          console.log('ura')
+          handleImageClick(largeImageURL, tags)
+        }}
       />
     </li>
   )

@@ -9,6 +9,7 @@ import { ImageGallery } from './Components/ImageGallery/ImageGallery'
 // import { Spinner } from 'components/Spinner/Spinner'
 import { fetchPictures } from './services/pictures-api'
 import Button from './Components/Button/Button'
+import Modal from './Components/Modal/Modal'
 
 const Status = {
   IDLE: 'idle',
@@ -23,19 +24,47 @@ export class App extends Component {
     pictures: [],
     status: Status.IDLE,
     page: 1,
+    largeImageURL: '',
+    imgTags: '',
+    loader: false,
+  }
+
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({ showModal: !showModal }))
+  }
+  handleImageClick = (largeImageURL, imgTags) => {
+    this.setState({ largeImageURL, imgTags, loader: true })
+    this.toggleModal()
   }
 
   handleFormSubmit = (pictureName) => {
-    if (pictureName.trim() === '') {
-      onErrorToast()
+    const pictureQuery = this.state.pictureName === pictureName
 
+    if (pictureQuery) {
       return
     }
+    if (pictureName.trim() === '') {
+      onErrorToast()
+      return
+    }
+
+    this.resetState()
     this.setState({ pictureName })
   }
 
   handleNameChange = (pictureName) => {
+    // this.resetState()
     this.setState({ pictureName })
+  }
+
+  resetState = () => {
+    this.setState({
+      pictureName: '',
+      page: 1,
+      pictures: [],
+      largeImageURL: null,
+      status: Status.IDLE,
+    })
   }
 
   scrollPageToEnd = () => {
@@ -52,6 +81,7 @@ export class App extends Component {
       page: prevState.page + 1,
       // status: Status.RESOLVED,
     }))
+    this.scrollPageToEnd()
   }
 
   async onFetchPictures() {
@@ -61,7 +91,7 @@ export class App extends Component {
 
       this.setState((prevState) => ({
         pictures: [...prevState.pictures, ...pictures],
-        page: this.state.page,
+
         status: Status.RESOLVED,
       }))
     } catch (error) {
@@ -73,23 +103,29 @@ export class App extends Component {
   componentDidUpdate(_, prevState) {
     const { pictureName, page } = this.state
     const shouldFetch =
-      prevState.pictureName !== pictureName && pictureName !== ''
+      prevState.pictureName !== pictureName || prevState.page !== page
 
     if (shouldFetch) {
-      this.setState({ status: Status.PENDING, page: 1, pictures: [] })
+      this.setState({ status: Status.PENDING })
       this.onFetchPictures()
     }
-    if (prevState.page !== page) {
-      console.log('hi')
-      this.onFetchPictures()
-    }
+
+    // if (prevState.page !== page) {
+    //   console.log('hi')
+    //   this.onFetchPictures()
+    // }
   }
 
   render() {
-    const { pictures, status } = this.state
-    // const { countries, reqStatus } = this.state
-    // const showCountryList = countries.length >= 2 && countries.length < 10
-    // const showCountryInfo = countries.length === 1
+    const {
+      pictures,
+      status,
+      showModal,
+      largeImageURL,
+      imgTags,
+      loader,
+    } = this.state
+
     const showImageList = pictures.length > 0
 
     return (
@@ -97,9 +133,24 @@ export class App extends Component {
         <ToastContainer autoClose={4000} />
 
         <SearchBar onSearch={this.handleFormSubmit} />
-        {status === Status.RESOLVED && <ImageGallery pictures={pictures} />}
+        {status === Status.RESOLVED && (
+          <ImageGallery
+            pictures={pictures}
+            handleImageClick={this.handleImageClick}
+          />
+        )}
         {showImageList && (
           <Button onClick={this.onLoadMoreBtn} aria-label="add contact" />
+        )}
+        {showModal && (
+          <Modal onClose={this.toggleModal}>
+            {/* {loader && <ModalLoader />} */}
+            <img
+              src={largeImageURL}
+              alt={imgTags}
+              // onLoad={this.hideLoaderInModal}
+            />
+          </Modal>
         )}
       </div>
     )
