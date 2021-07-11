@@ -20,21 +20,6 @@ export const fetchPictures = async (pictureName, page) => {
     `${BASE_URL}/?key=${API_KEY}&q=${pictureName}&image_type=photo&page&per_page=12&page=${page}`,
   )
   const hits = await response.data.hits
-  if (hits.length === 0) {
-    throw new Error(`Нет изображений по ключевому слову ${pictureName}`)
-  }
+
   return hits
-  // if (response.ok) {
-  //   const data = await response.json()
-  //   const { hits } = await data
-  //   return hits
-  // }
 }
-
-// axios.defaults.baseURL = 'https://restcountries.eu/rest/v2';
-
-// export const fetchCountries = async countryName => {
-//   const params = 'fields=name;capital;population;flag;languages';
-//   const response = await axios.get(`/name/${countryName}?${params}`);
-//   return response.data;
-// };

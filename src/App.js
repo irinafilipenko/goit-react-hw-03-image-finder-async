@@ -2,14 +2,16 @@ import { Component } from 'react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { onErrorToast } from './Components/ToastError'
-// import { SearchForm } from 'components/SearchForm/SearchForm';
+import { GalleryLoader, ModalLoader } from './Components/Loader/Loader'
+import s from './App.module.css'
+import Container from './Components/Container/Container'
 import { SearchBar } from './Components/Searchbar/Searchbar'
 import { ImageGallery } from './Components/ImageGallery/ImageGallery'
-// import { CountryInfo } from 'components/CountryInfo/CountryInfo'
-// import { Spinner } from 'components/Spinner/Spinner'
+
 import { fetchPictures } from './services/pictures-api'
 import Button from './Components/Button/Button'
 import Modal from './Components/Modal/Modal'
+import image from './Components/Images/defoultImg.jpg'
 
 const Status = {
   IDLE: 'idle',
@@ -32,6 +34,9 @@ export class App extends Component {
   toggleModal = () => {
     this.setState(({ showModal }) => ({ showModal: !showModal }))
   }
+
+  hideLoaderInModal = () => this.setState({ loader: false })
+
   handleImageClick = (largeImageURL, imgTags) => {
     this.setState({ largeImageURL, imgTags, loader: true })
     this.toggleModal()
@@ -79,15 +84,17 @@ export class App extends Component {
   onLoadMoreBtn = () => {
     this.setState((prevState) => ({
       page: prevState.page + 1,
-      // status: Status.RESOLVED,
     }))
-    this.scrollPageToEnd()
   }
 
   async onFetchPictures() {
     const { pictureName, page } = this.state
     try {
       const pictures = await fetchPictures(pictureName, page)
+
+      if (pictures.length === 0) {
+        throw new Error()
+      }
 
       this.setState((prevState) => ({
         pictures: [...prevState.pictures, ...pictures],
@@ -109,11 +116,9 @@ export class App extends Component {
       this.setState({ status: Status.PENDING })
       this.onFetchPictures()
     }
-
-    // if (prevState.page !== page) {
-    //   console.log('hi')
-    //   this.onFetchPictures()
-    // }
+    if (page > 1) {
+      this.scrollPageToEnd()
+    }
   }
 
   render() {
@@ -129,10 +134,17 @@ export class App extends Component {
     const showImageList = pictures.length > 0
 
     return (
-      <div>
+      <Container>
         <ToastContainer autoClose={4000} />
 
         <SearchBar onSearch={this.handleFormSubmit} />
+        {status === Status.IDLE && (
+          <>
+            <img src={image} width="800" alt="question" className={s.image} />
+          </>
+        )}
+        {status === Status.PENDING && <GalleryLoader />}
+
         {status === Status.RESOLVED && (
           <ImageGallery
             pictures={pictures}
@@ -144,15 +156,15 @@ export class App extends Component {
         )}
         {showModal && (
           <Modal onClose={this.toggleModal}>
-            {/* {loader && <ModalLoader />} */}
+            {loader && <ModalLoader />}
             <img
               src={largeImageURL}
               alt={imgTags}
-              // onLoad={this.hideLoaderInModal}
+              onLoad={this.hideLoaderInModal}
             />
           </Modal>
         )}
-      </div>
+      </Container>
     )
   }
 }
