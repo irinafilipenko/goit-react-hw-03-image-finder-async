@@ -14,7 +14,6 @@ function ImageGalleryItem({
         alt={tags}
         className={s.ImageGalleryItem_image}
         onClick={() => {
-          console.log('ura')
           handleImageClick(largeImageURL, tags)
         }}
       />

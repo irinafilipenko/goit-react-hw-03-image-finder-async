@@ -2,7 +2,6 @@ import s from './ImageGallery.module.css'
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem'
 
 export const ImageGallery = ({ pictures, handleImageClick }) => {
-  console.log(handleImageClick)
   return (
     <ul className={s.ImageGallery}>
       {pictures.map(({ id, webformatURL, largeImageURL, tags }) => (

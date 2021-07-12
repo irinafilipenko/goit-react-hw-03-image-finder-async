@@ -3,7 +3,10 @@ import s from './Searchbar.module.css'
 export const SearchBar = ({ onSearch }) => {
   const handleSearch = (e) => {
     e.preventDefault()
+
     onSearch(e.target.elements.pictureName.value)
+
+    e.target.elements.pictureName.value = ' '
   }
 
   return (

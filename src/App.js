@@ -26,20 +26,19 @@ export class App extends Component {
     pictures: [],
     status: Status.IDLE,
     page: 1,
-    largeImageURL: '',
+    largeImageURL: null,
     imgTags: '',
     loader: false,
   }
 
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({ showModal: !showModal }))
+  onModalClose = () => {
+    this.setState({ largeImageURL: null })
   }
 
   hideLoaderInModal = () => this.setState({ loader: false })
 
   handleImageClick = (largeImageURL, imgTags) => {
     this.setState({ largeImageURL, imgTags, loader: true })
-    this.toggleModal()
   }
 
   handleFormSubmit = (pictureName) => {
@@ -58,16 +57,14 @@ export class App extends Component {
   }
 
   handleNameChange = (pictureName) => {
-    // this.resetState()
     this.setState({ pictureName })
   }
 
   resetState = () => {
     this.setState({
-      pictureName: '',
+      pictureName: null,
       page: 1,
       pictures: [],
-      largeImageURL: null,
       status: Status.IDLE,
     })
   }
@@ -122,14 +119,7 @@ export class App extends Component {
   }
 
   render() {
-    const {
-      pictures,
-      status,
-      showModal,
-      largeImageURL,
-      imgTags,
-      loader,
-    } = this.state
+    const { pictures, status, largeImageURL, imgTags, loader } = this.state
 
     const showImageList = pictures.length > 0
 
@@ -154,8 +144,8 @@ export class App extends Component {
         {showImageList && (
           <Button onClick={this.onLoadMoreBtn} aria-label="add contact" />
         )}
-        {showModal && (
-          <Modal onClose={this.toggleModal}>
+        {largeImageURL && (
+          <Modal onClose={this.onModalClose}>
             {loader && <ModalLoader />}
             <img
               src={largeImageURL}
